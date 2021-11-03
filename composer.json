@@ -13,6 +13,6 @@
             "email": "anderson.h.silva@gmail.com"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stable": "dev",
     "require": {}
 }
