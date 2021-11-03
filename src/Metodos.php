@@ -6,6 +6,6 @@ class Metodos
 {
     public function version()
     {
-        echo "0.0.1";
+        echo "stable";
     }
 }
