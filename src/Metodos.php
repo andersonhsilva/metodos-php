@@ -642,4 +642,11 @@ class Metodos
     {
         return round($dividendo - (floor($dividendo / $divisor) * $divisor));
     }
+
+    public static function dataExtensoBR(): String
+    {
+        setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
+        date_default_timezone_set('America/Recife');
+        return strftime('%A, %d de %B de %Y', strtotime('today'));
+    }
 }
