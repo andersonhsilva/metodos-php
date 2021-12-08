@@ -573,4 +573,22 @@ class Metodos
         // devolver a string
         return str_replace($what, $by, $string);
     }
+
+    public static function geradorCPF()
+    {
+        $num = array();
+        $num[9] = $num[10] = $num[11] = 0;
+        for ($w = 0; $w > -2; $w--) {
+            for ($i = $w; $i < 9; $i++) {
+                $x = ($i - 10) * -1;
+                $w == 0 ? $num[$i] = rand(0, 9) : '';
+                echo ($w == 0 ? $num[$i] : '');
+                ($w == -1 && $i == $w && $num[11] == 0) ?
+                    $num[11] += $num[10] * 2    :
+                    $num[10 - $w] += $num[$i - $w] * $x;
+            }
+            $num[10 - $w] = (($num[10 - $w] % 11) < 2 ? 0 : (11 - ($num[10 - $w] % 11)));
+            return $num[10 - $w];
+        }
+    }
 }
