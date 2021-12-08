@@ -574,21 +574,72 @@ class Metodos
         return str_replace($what, $by, $string);
     }
 
-    public static function geradorCPF()
+    public static function cnpjRandom($mascara = "1")
     {
-        $num = array();
-        $num[9] = $num[10] = $num[11] = 0;
-        for ($w = 0; $w > -2; $w--) {
-            for ($i = $w; $i < 9; $i++) {
-                $x = ($i - 10) * -1;
-                $w == 0 ? $num[$i] = rand(0, 9) : '';
-                echo ($w == 0 ? $num[$i] : '');
-                ($w == -1 && $i == $w && $num[11] == 0) ?
-                    $num[11] += $num[10] * 2    :
-                    $num[10 - $w] += $num[$i - $w] * $x;
-            }
-            $num[10 - $w] = (($num[10 - $w] % 11) < 2 ? 0 : (11 - ($num[10 - $w] % 11)));
-            return $num[10 - $w];
+        $n1 = rand(0, 9);
+        $n2 = rand(0, 9);
+        $n3 = rand(0, 9);
+        $n4 = rand(0, 9);
+        $n5 = rand(0, 9);
+        $n6 = rand(0, 9);
+        $n7 = rand(0, 9);
+        $n8 = rand(0, 9);
+        $n9 = 0;
+        $n10 = 0;
+        $n11 = 0;
+        $n12 = 1;
+        $d1 = $n12 * 2 + $n11 * 3 + $n10 * 4 + $n9 * 5 + $n8 * 6 + $n7 * 7 + $n6 * 8 + $n5 * 9 + $n4 * 2 + $n3 * 3 + $n2 * 4 + $n1 * 5;
+        $d1 = 11 - (Self::mod($d1, 11));
+        if ($d1 >= 10) {
+            $d1 = 0;
         }
+        $d2 = $d1 * 2 + $n12 * 3 + $n11 * 4 + $n10 * 5 + $n9 * 6 + $n8 * 7 + $n7 * 8 + $n6 * 9 + $n5 * 2 + $n4 * 3 + $n3 * 4 + $n2 * 5 + $n1 * 6;
+        $d2 = 11 - (Self::mod($d2, 11));
+        if ($d2 >= 10) {
+            $d2 = 0;
+        }
+        $retorno = '';
+        if ($mascara == 1) {
+
+            $retorno = '' . $n1 . $n2 . $n3 . $n4 . $n5 . $n6 . $n7 . $n8 . $n9 . $n10 . $n11 . $n12 . $d1 . $d2;
+        } else {
+            $retorno = '' . $n1 . $n2 . "." . $n3 . $n4 . $n5 . "." . $n6 . $n7 . $n8 . "/" . $n9 . $n10 . $n11 . $n12 . "-" . $d1 . $d2;
+        }
+        return $retorno;
+    }
+
+    public static function cpfRandom($mascara = "1")
+    {
+        $n1 = rand(0, 9);
+        $n2 = rand(0, 9);
+        $n3 = rand(0, 9);
+        $n4 = rand(0, 9);
+        $n5 = rand(0, 9);
+        $n6 = rand(0, 9);
+        $n7 = rand(0, 9);
+        $n8 = rand(0, 9);
+        $n9 = rand(0, 9);
+        $d1 = $n9 * 2 + $n8 * 3 + $n7 * 4 + $n6 * 5 + $n5 * 6 + $n4 * 7 + $n3 * 8 + $n2 * 9 + $n1 * 10;
+        $d1 = 11 - (Self::mod($d1, 11));
+        if ($d1 >= 10) {
+            $d1 = 0;
+        }
+        $d2 = $d1 * 2 + $n9 * 3 + $n8 * 4 + $n7 * 5 + $n6 * 6 + $n5 * 7 + $n4 * 8 + $n3 * 9 + $n2 * 10 + $n1 * 11;
+        $d2 = 11 - (Self::mod($d2, 11));
+        if ($d2 >= 10) {
+            $d2 = 0;
+        }
+        $retorno = '';
+        if ($mascara == 1) {
+            $retorno = '' . $n1 . $n2 . $n3 . $n4 . $n5 . $n6 . $n7 . $n8 . $n9 . $d1 . $d2;
+        } else {
+            $retorno = '' . $n1 . $n2 . $n3 . "." . $n4 . $n5 . $n6 . "." . $n7 . $n8 . $n9 . "-" . $d1 . $d2;
+        }
+        return $retorno;
+    }
+
+    private static function mod($dividendo, $divisor)
+    {
+        return round($dividendo - (floor($dividendo / $divisor) * $divisor));
     }
 }
