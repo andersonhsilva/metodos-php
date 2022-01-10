@@ -16,3 +16,4 @@ composer require andersonhsilva/metodos-php
 
 **Seguindo todos esses passos, basta utilizar os diversos metodos de qualquer lugar do seu projeto.**
 
+Execute o metodo conforme segue para nível de teste em seu projeto: Metodos::teste(); voce terá o seguinte resultado: Teste...ok.
