@@ -274,6 +274,19 @@ class Metodos
     }
 
     // exemplo de uso: diferenca_meses('2021-04-01', '2021-06-30');
+    public static function diferenca_anos($data_inicial, $data_final)
+    {
+        try {
+            $data_inicial = new \DateTime($data_inicial);
+            $diferenca = $data_inicial->diff(new \DateTime($data_final));
+            $result = (int) $diferenca->format('%y');
+            return $result;
+        } catch (\Exception $e) {
+            return 0;
+        }
+    }
+
+    // exemplo de uso: diferenca_meses('2021-04-01', '2021-06-30');
     public static function diferenca_meses($data_inicial, $data_final)
     {
         try {
@@ -286,12 +299,13 @@ class Metodos
         }
     }
 
+    // exemplo de uso: diferenca_meses('2021-04-01', '2021-06-30');
     public static function diferenca_dias($data_inicial, $data_final)
     {
         try {
             $data_inicial = new \DateTime($data_inicial);
             $diferenca = $data_inicial->diff(new \DateTime($data_final));
-            $result = (int) $diferenca->format('%a'); // a = diferença de dias corridos
+            $result = (int) $diferenca->format('%d');
             return $result;
         } catch (\Exception $e) {
             return 0;
