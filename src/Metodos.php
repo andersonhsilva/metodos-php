@@ -11,11 +11,13 @@ class Metodos
     }
 
     // -------------------tratamento de strings-----------------------------------
-    public static function double_base($value): float
+    public static function double_base($value)
     {
-        if (!is_float($value)) {
-            $value = str_replace(array("R$ ", "%", "."), "", $value);
-            $value = floatval(str_replace(",", ".", $value));
+        if ($value !== null) {
+            if (!is_float($value)) {
+                $value = str_replace(array("R$ ", "%", "."), "", $value);
+                $value = floatval(str_replace(",", ".", $value));
+            }
         }
         return $value ?? null;
     }
@@ -25,9 +27,9 @@ class Metodos
         return str_pad($value, $tamanho, '0', STR_PAD_LEFT);
     }
 
-    public static function exibir_double($value): string
+    public static function exibir_double($value)
     {
-        return number_format($value, 2, ',', '.') ?? null;
+        return $value === null ? null : number_format($value, 2, ',', '.');
     }
 
     public static function exibir_double_format_int($value)
@@ -697,19 +699,20 @@ class Metodos
             $ru = ($value > 0) ? (($value[1] == 1) ? $d10[$value[2]] : $u[$value[2]]) : "";
 
             $r = $rc . (($rc && ($rd || $ru)) ? " e " : "") . $rd . (($rd &&
-                    $ru) ? " e " : "") . $ru;
+                $ru) ? " e " : "") . $ru;
             $t = $cont - 1 - $i;
             $r .= $r ? " " . ($value > 1 ? $plural[$t] : $singular[$t]) : "";
-            if ($value == "000"
+            if (
+                $value == "000"
             )
                 $z++;
             elseif ($z > 0)
                 $z--;
             if (($t == 1) && ($z > 0) && ($integer[0] > 0))
-                $r .= ( ($z > 1) ? " de " : "") . $plural[$t];
+                $r .= (($z > 1) ? " de " : "") . $plural[$t];
             if ($r)
                 $rt = $rt . ((($i > 0) && ($i <= $fim) &&
-                        ($integer[0] > 0) && ($z < 1)) ? ( ($i < $fim) ? ", " : " e ") : " ") . $r;
+                    ($integer[0] > 0) && ($z < 1)) ? (($i < $fim) ? ", " : " e ") : " ") . $r;
         }
 
         if (!$uppercase) {
@@ -720,8 +723,4 @@ class Metodos
             return trim(ucwords($rt) ? ucwords($rt) : "Zero");
         }
     }
-
-
-
-
 }
