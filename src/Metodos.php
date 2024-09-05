@@ -11,7 +11,19 @@ class Metodos
     }
 
     // -------------------tratamento de strings-----------------------------------
-    public static function double_base($value)
+
+    /**
+     * Converte um valor para float, removendo símbolos de moeda e formatação comuns.
+     *
+     * Esta função aceita um valor, remove símbolos de moeda e caracteres de formatação comuns,
+     * e o converte para um float. Se o valor já for um float, ele é retornado como está.
+     * Se o valor for `null`, a função retorna `null`.
+     *
+     * @param mixed $value O valor a ser convertido. Pode ser uma string ou um float.
+     * 
+     * @return float|null Retorna o valor convertido em float, ou `null` se o valor de entrada for `null`.
+     */
+    public static function doubleBase($value)
     {
         if ($value !== null) {
             if (!is_float($value)) {
@@ -22,56 +34,112 @@ class Metodos
         return $value ?? null;
     }
 
-    public static function zero_esquerda($value, $tamanho = 6)
+    /**
+     * Adiciona zeros à esquerda de um valor até atingir o comprimento especificado.
+     *
+     * @param string $value O valor a ser preenchido com zeros.
+     * @param int $length O comprimento desejado da string final.
+     * @return string O valor preenchido com zeros à esquerda.
+     */
+    public static function padLeftWithZeroes($value, $length = 6)
     {
-        return str_pad($value, $tamanho, '0', STR_PAD_LEFT);
+        return str_pad($value, $length, '0', STR_PAD_LEFT);
     }
 
-    public static function exibir_double($value)
+    /**
+     * Formata um valor numérico para exibição com duas casas decimais, usando vírgula como separador decimal e ponto como separador de milhar.
+     *
+     * @param float|null $value O valor a ser formatado.
+     * @return string|null O valor formatado como string ou null se o valor for null.
+     */
+    public static function showDouble($value)
     {
         return $value === null ? null : number_format($value, 2, ',', '.');
     }
 
-    public static function exibir_double_format_int($value)
+    /**
+     * Formata um valor numérico como um inteiro, removendo as casas decimais.
+     *
+     * @param float $value O valor a ser formatado.
+     * @return int O valor formatado como inteiro.
+     */
+    public static function showDoubleAsInt($value)
     {
         return (int) number_format($value, 2, '', '');
     }
 
-    public static function exibir_int_format_double($value)
+    /**
+     * Converte um valor inteiro para um formato decimal, assumindo que os últimos dois dígitos representam os centavos.
+     *
+     * @param int $value O valor inteiro a ser convertido.
+     * @return float O valor convertido para decimal.
+     */
+    public static function showIntAsDouble($value)
     {
         return floatval(substr($value, 0, -2) . '.' . substr($value, -2));
     }
 
-    public static function mascara_string($value, $mask)
+    /**
+     * Aplica uma máscara a uma string.
+     *
+     * @param string|null $value O valor a ser maskdo.
+     * @param string $mask A máscara a ser aplicada.
+     * @return string|null O valor maskdo ou null se o valor não estiver definido.
+     */
+    public static function maskString($value, $mask)
     {
         return (isset($value)) ? self::mask($value, $mask) : null;
     }
 
-    public static function mascara_data($value, $mask)
+    /**
+     * Formata uma data usando a máscara especificada.
+     *
+     * @param string|null $value A data a ser formatada.
+     * @param string $mask A máscara de data a ser usada.
+     * @return string|null A data formatada ou null se o valor não estiver definido.
+     */
+    public static function maskDate($value, $mask)
     {
         $result = (isset($value)) ? date($mask, strtotime($value)) : null;
         return $result;
     }
 
-    public static function converte_data_bd($data_br)
+    /**
+     * Converte uma data do formato brasileiro (dd/mm/yyyy) para o formato de banco de dados (yyyy-mm-dd).
+     *
+     * @param string|null $br_date A data no formato brasileiro (dd/mm/yyyy).
+     * @return string|null A data no formato de banco de dados (yyyy-mm-dd) ou null se a entrada não estiver definida.
+     */
+    public static function convertDateToDbFormat($br_date)
     {
-        $result = (isset($data_br)) ? implode("-", array_reverse(explode("/", $data_br))) : null;
+        $result = (isset($br_date)) ? implode("-", array_reverse(explode("/", $br_date))) : null;
         return $result;
     }
 
-    // $periodo = minutes, hours, day, week, month, year
-    // exemplo de uso para somar um mes na data de hoje: $data = incluir_em_data('+1', 'month', date('Y-m-d'));
-    public static function incluir_em_data($numero, $periodo, $data_informada)
+    /**
+     * Adiciona um período a uma data informada e retorna a nova data no formato yyyy-mm-dd.
+     *
+     * @param int $number O número a ser adicionado ao período.
+     * @param string $period O período a adicionar (e.g., 'days', 'months', 'years').
+     * @param string $input_date A data informada no formato yyyy-mm-dd.
+     * @return string A nova data no formato yyyy-mm-dd ou a data informada em caso de erro.
+     */
+    public static function addPeriodToDate($number, $period, $input_date)
     {
         try {
-            return date('Y-m-d', strtotime($numero . ' ' . $periodo, strtotime($data_informada)));
+            return date('Y-m-d', strtotime($number . ' ' . $period, strtotime($input_date)));
         } catch (\Exception $e) {
-            return $data_informada;
+            return $input_date;
         }
     }
 
-    // exemplo de uso: ultimo_dia_mes(date('Y-m'))
-    public static function ultimo_dia_mes($periodo)
+    /**
+     * Retorna o último dia do mês para um período dado no formato yyyy-mm.
+     *
+     * @param string $periodo O período no formato yyyy-mm.
+     * @return string O último dia do mês em formato de data.
+     */
+    public static function lastDayOfMonth($periodo)
     {
         try {
             return date("t", mktime(0, 0, 0, explode('-', $periodo)[1], '01', explode('-', $periodo)[0]));
@@ -80,74 +148,149 @@ class Metodos
         }
     }
 
-    public static function round_up($number, $precision = 2)
+    /**
+     * Arredonda um número para cima até o número de casas decimais especificado.
+     *
+     * @param float $number O número a ser arredondado.
+     * @param int $precision O número de casas decimais para arredondar.
+     * @return float O número arredondado para cima.
+     */
+    public static function RoundUp($number, $precision = 2)
     {
         try {
             $fig = (int) str_pad('1', ($precision + 1), '0');
             return (ceil($number * $fig) / $fig);
         } catch (\Exception $e) {
-            return  $number;
+            return $number;
         }
     }
 
-    public static function round_down($number, $precision = 2)
+    /**
+     * Arredonda um número para baixo até o número de casas decimais especificado.
+     *
+     * @param float $number O número a ser arredondado.
+     * @param int $precision O número de casas decimais para arredondar.
+     * @return float O número arredondado para baixo.
+     */
+    public static function roundDown($number, $precision = 2)
     {
         try {
             $fig = (int) str_pad('1', ($precision + 1), '0');
             return (floor($number * $fig) / $fig);
         } catch (\Exception $e) {
-            return  $number;
+            return $number;
         }
     }
 
-    public static function somente_numero($value)
+    /**
+     * Remove todos os caracteres não numéricos de uma string.
+     *
+     * @param string $value A string contendo caracteres não numéricos.
+     * @return string|null A string contendo apenas números ou null se a string resultante estiver vazia.
+     */
+    public static function onlyNumber($value)
     {
         $result = preg_replace("/[^0-9]/", "", $value);
         return (!empty($result)) ? $result : null;
     }
 
-    public static function somente_letras_numero($value)
+    /**
+     * Remove todos os caracteres que não sejam letras ou números de uma string.
+     *
+     * @param string $value A string contendo caracteres que não são letras ou números.
+     * @return string|null A string contendo apenas letras e números ou null se a string resultante estiver vazia.
+     */
+    public static function onlyLettersAndNumbers($value)
     {
         $result = preg_replace("/[^A-Za-z0-9]/", "", $value);
         return (!empty($result)) ? $result : null;
     }
 
-    public static function letras_menusculas($value)
+    /**
+     * Converte todas as letras da string para minúsculas.
+     *
+     * @param string $value O valor a ser convertido.
+     * @return string|null A string em letras minúsculas ou null se estiver vazia.
+     */
+    public static function lowerLetters($value)
     {
         return (!empty($value)) ? strtolower($value) : null;
     }
 
-    public static function letras_maiusculas($value)
+    /**
+     * Converte todas as letras da string para maiúsculas.
+     *
+     * @param string $value O valor a ser convertido.
+     * @return string|null A string em letras maiúsculas ou null se estiver vazia.
+     */
+    public static function upperLetters($value)
     {
         return (!empty($value)) ? strtoupper($value) : null;
     }
 
-    public static function primeira_letra_maiuscula($value)
+    /**
+     * Converte apenas a primeira letra da string para maiúscula.
+     *
+     * @param string $value O valor a ser convertido.
+     * @return string|null A string com a primeira letra em maiúscula ou null se estiver vazia.
+     */
+    public static function upperFirstLetterOnly($value)
     {
         return (!empty($value)) ? ucfirst($value) : null;
     }
 
-    public static function primeiras_letras_maiusculas($value)
+    /**
+     * Converte a primeira letra de cada palavra da string para maiúscula.
+     *
+     * @param string $value O valor a ser convertido.
+     * @return string|null A string com a primeira letra de cada palavra em maiúscula ou null se estiver vazia.
+     */
+    public static function firstLettersOfWords($value)
     {
         return (!empty($value)) ? ucwords($value) : null;
     }
 
-    public static function somente_primeiro_nome($value)
+    /**
+     * Retorna apenas o primeiro nome de uma string.
+     *
+     * @param string $value O valor contendo o nome completo.
+     * @return string O primeiro nome ou uma string vazia se o valor estiver vazio.
+     */
+    public static function onlyFirstName($value)
     {
         return (!empty($value)) ? explode(" ", $value)[0] : '';
     }
 
-    public static function contains($palavra, $frase)
+    /**
+     * Verifica se uma palavra está contida em uma frase.
+     *
+     * @param string $word A palavra a ser pesquisada.
+     * @param string $sentence A frase onde será pesquisada a palavra.
+     * @return bool Retorna true se a palavra estiver contida na frase, senão false.
+     */
+    public static function contains($word, $sentence)
     {
-        return strpos($frase, $palavra) !== false;
+        return strpos($sentence, $word) !== false;
     }
 
-    public static function limpa_string_chars($text)
+    /**
+     * Remove caracteres especiais de uma string, mantendo apenas letras, números, e alguns caracteres acentuados.
+     *
+     * @param string $text O texto a ser limpo.
+     * @return string O texto limpo contendo apenas letras, números e caracteres válidos.
+     */
+    public static function cleanStringChars($text)
     {
         return preg_replace('/[^0-9a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ\/\.]/', ' ', $text);
     }
 
-    public static function somente_nome_sobrenome($value)
+    /**
+     * Retorna o primeiro e o segundo nome de uma string.
+     *
+     * @param string $value O valor contendo o nome completo.
+     * @return string O primeiro e segundo nome ou apenas o primeiro nome em caso de erro.
+     */
+    public static function onlyFirstAndSecondName($value)
     {
         $value = explode(" ", $value);
         $result = '';
@@ -160,6 +303,12 @@ class Metodos
         }
     }
 
+    /**
+     * Gera as iniciais do nome para usar em um avatar.
+     *
+     * @param string $name O nome completo.
+     * @return string As iniciais em letras maiúsculas.
+     */
     public static function iniciais_para_avatar($name)
     {
         $value = explode(" ", preg_replace(array("/(á|à|ã|â|ä)/", "/(Á|À|Ã|Â|Ä)/", "/(é|è|ê|ë)/", "/(É|È|Ê|Ë)/", "/(í|ì|î|ï)/", "/(Í|Ì|Î|Ï)/", "/(ó|ò|õ|ô|ö)/", "/(Ó|Ò|Õ|Ô|Ö)/", "/(ú|ù|û|ü)/", "/(Ú|Ù|Û|Ü)/", "/(ñ)/", "/(Ñ)/", "/(Ç)/", "/(ç)/", "/(Ã)/"), explode(" ", "a A e E i I o O u U n N C c A"), $name));
@@ -174,6 +323,14 @@ class Metodos
     }
 
     // -------------------validações----------------------------------------------
+
+    /**
+     * Valida se um campo está vazio.
+     *
+     * @param string $field O nome do campo.
+     * @param string $value O valor do campo.
+     * @throws \Exception Se o campo estiver vazio.
+     */
     public static function validar_vazio($field, $value)
     {
         if (empty($value)) {
@@ -181,6 +338,12 @@ class Metodos
         }
     }
 
+    /**
+     * Valida se o CPF é válido.
+     *
+     * @param string $value O CPF a ser validado.
+     * @throws \Exception Se o CPF for inválido.
+     */
     public static function validar_cpf($value)
     {
         if (!empty($value)) {
@@ -190,6 +353,12 @@ class Metodos
         }
     }
 
+    /**
+     * Valida se o CNPJ é válido.
+     *
+     * @param string $value O CNPJ a ser validado.
+     * @throws \Exception Se o CNPJ for inválido.
+     */
     public static function validar_cnpj($value)
     {
         if (!empty($value)) {
@@ -199,6 +368,12 @@ class Metodos
         }
     }
 
+    /**
+     * Valida se o CPF ou CNPJ é válido.
+     *
+     * @param string $value O CPF ou CNPJ a ser validado.
+     * @throws \Exception Se o CPF ou CNPJ for inválido.
+     */
     public static function validar_cpf_cnpj($value)
     {
         if ($value != null && !empty($value)) {
@@ -214,7 +389,13 @@ class Metodos
         }
     }
 
-    public static function validar_email($value)
+    /**
+     * Valida se o e-mail é válido.
+     *
+     * @param string $value O e-mail a ser validado.
+     * @throws \Exception Se o e-mail for inválido.
+     */
+    public static function validateEmail($value)
     {
         if (!empty($value)) {
             if (!self::isEmailValid($value)) {
@@ -223,99 +404,168 @@ class Metodos
         }
     }
 
-    public static function url_atual()
+    /**
+     * Retorna a URL atual.
+     *
+     * @return string A URL completa da requisição atual.
+     */
+    public static function currentUrl()
     {
         return (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
     }
 
     // ----------------------------------------------F U N C O E S---------------------------------------------
 
-    public static function saudacao()
+    /**
+     * Retorna uma saudação de acordo com o horário atual.
+     *
+     * @return string Saudação baseada na hora do dia: 'bom dia', 'boa tarde' ou 'boa noite'.
+     */
+    public static function greeting()
     {
-        $hora = date('H');
-        if ($hora >= 6 && $hora <= 12)
+        $hour = date('H');
+        if ($hour >= 6 && $hour <= 12)
             return 'bom dia';
-        else if ($hora > 12 && $hora <= 18)
+        else if ($hour > 12 && $hour <= 18)
             return 'boa tarde';
         else
             return 'boa noite';
     }
 
-    public static function adiciona_9_digito($tel)
+    /**
+     * Adiciona o nono dígito ao número de celular, se necessário.
+     *
+     * @param string $phone_in O número de telefone de entrada.
+     * @return string O número de telefone com o nono dígito adicionado, se aplicável.
+     */
+    public static function addNinthDigit($phone_in)
     {
 
         // retirando espaços
-        $tel = trim($tel);
-        $tamanho = strlen($tel);
-        $telefone = '';
+        $phone_in = trim($phone_in);
+        $length = strlen($phone_in);
+        $phone_out = '';
 
         // se maior não faz nada
-        if ($tamanho  > '10') {
-            $telefone = $tel;
+        if ($length  > '10') {
+            $phone_out = $phone_in;
         }
 
         // se igual adiciona o nono digito caso o numero seja um celular
-        if ($tamanho == '10') {
-            $verificando_celular = substr($tel, 2, 1);
+        if ($length == '10') {
+            $verificando_celular = substr($phone_in, 2, 1);
             // verifica se é um numero de celular
             if (in_array($verificando_celular, array("9", "8", "7"))) {
-                $telefone .= substr($tel, 0, 2);
-                $telefone .= "9"; // nono digito
-                $telefone .= substr($tel, 2);
+                $phone_out .= substr($phone_in, 0, 2);
+                $phone_out .= "9"; // nono digito
+                $phone_out .= substr($phone_in, 2);
             } else {
-                $telefone = $tel;
+                $phone_out = $phone_in;
             }
         }
 
         // se menor não faz nada
-        if ($tamanho < '10') {
-            $telefone = $tel;
+        if ($length < '10') {
+            $phone_out = $phone_in;
         }
 
-        return $telefone;
+        return $phone_out;
     }
 
-    // exemplo de uso: diferenca_meses('2021-04-01', '2021-06-30');
-    public static function diferenca_anos($data_inicial, $data_final)
+    /**
+     * Calcula a diferença em anos entre duas datas.
+     * Esta função recebe duas datas e calcula a diferença em anos entre elas. 
+     * Se ocorrer um erro ao criar os objetos `DateTime`, a função retorna 0.
+     *
+     * Esta função calcula a diferença em anos entre uma data inicial e uma data final,
+     * levando em consideração o número de anos completos entre as duas datas.
+     * Se a data final for anterior à data inicial, o resultado será negativo.
+     * Em caso de erro na conversão das datas, a função retorna 0.
+     *
+     * @param string $start_date Data inicial no formato 'Y-m-d'.
+     * @param string $end_date Data final no formato 'Y-m-d'.
+     * @return int Diferença em anos entre as duas datas. Retorna 0 em caso de erro.
+     * @throws \Exception Se a conversão de data falhar.
+     */
+    public static function differenceInYears($start_date, $end_date)
     {
         try {
-            $data_inicial = new \DateTime($data_inicial);
-            $diferenca = $data_inicial->diff(new \DateTime($data_final));
-            $result = (int) $diferenca->format('%y');
+            $start_date = new \DateTime($start_date);
+            $difference = $start_date->diff(new \DateTime($end_date));
+            $result = (int) $difference->format('%y');
             return $result;
         } catch (\Exception $e) {
             return 0;
         }
     }
 
-    // exemplo de uso: diferenca_meses('2021-04-01', '2021-06-30');
-    public static function diferenca_meses($data_inicial, $data_final)
+    /**
+     * Calcula a diferença em meses entre duas datas.
+     * Esta função recebe duas datas e calcula a diferença em meses entre elas. 
+     * Se ocorrer um erro ao criar os objetos `DateTime`, a função retorna 0.
+     *
+     * @param string $start_date Data inicial no formato 'Y-m-d'.
+     * @param string $end_date Data final no formato 'Y-m-d'.
+     * @return int Diferença em meses entre as duas datas. Retorna 0 em caso de erro.
+     * @throws \Exception Se a conversão de data falhar.
+     */
+    public static function differenceInMonths($start_date, $end_date)
     {
         try {
-            $data_inicial = new \DateTime($data_inicial);
-            $diferenca = $data_inicial->diff(new \DateTime($data_final));
-            $result = (int) $diferenca->format('%m');
+            $start_date = new \DateTime($start_date);
+            $difference = $start_date->diff(new \DateTime($end_date));
+            $result = (int) $difference->format('%m');
             return $result;
         } catch (\Exception $e) {
             return 0;
         }
     }
 
-    // exemplo de uso: diferenca_meses('2021-04-01', '2021-06-30');
-    public static function diferenca_dias($data_inicial, $data_final)
+    /**
+     * Calcula a diferença em dias entre duas datas.
+     *
+     * Esta função recebe duas datas e calcula a diferença em dias entre elas. 
+     * Se ocorrer um erro ao criar os objetos `DateTime`, a função retorna 0.
+     *
+     * @param string $start_date A data de início no formato aceito pelo construtor `DateTime`.
+     * @param string $end_date A data de término no formato aceito pelo construtor `DateTime`.
+     * @return int A diferença em dias entre as duas datas. Retorna 0 em caso de erro.
+     *
+     * @throws \Exception Se ocorrer um erro ao criar os objetos `DateTime`.
+     */
+    public static function differenceInDays($start_date, $end_date)
     {
         try {
-            $data_inicial = new \DateTime($data_inicial);
-            $diferenca = $data_inicial->diff(new \DateTime($data_final));
-            $result = (int) $diferenca->format('%d');
+            $start_date = new \DateTime($start_date);
+            $difference = $start_date->diff(new \DateTime($end_date));
+            $result = (int) $difference->format('%d');
             return $result;
         } catch (\Exception $e) {
             return 0;
         }
     }
 
-    // exemplo de uso: gera_variacao(300, 5, 3);
-    public static function gera_variacao($montante, $pctVariacao, $qtdParcelas)
+    /**
+     * Gera uma lista de valores de parcelas variáveis.
+     *
+     * Esta função calcula uma lista de parcelas com variações aleatórias com base em um montante total,
+     * uma porcentagem de variação e um número de parcelas. As parcelas variam dentro do intervalo definido 
+     * pela porcentagem de variação em relação ao valor inicial das parcelas.
+     *
+     * @param float $amount O montante total a ser dividido em parcelas.
+     * @param float $variationPct A porcentagem de variação permitida em relação ao valor da parcela.
+     * @param int $installments O número total de parcelas.
+     * @return array Uma lista de valores de parcelas com variação.
+     *
+     * @example
+     * // Exemplo de uso:
+     * $amount = 300;
+     * $variationPct = 5;
+     * $installments = 3;
+     * $parcelas = generateVariation($amount, $variationPct, $installments);
+     * // $parcelas pode ser algo como [95.00, 103.00, 102.00]
+     */
+    public static function generateVariation($amount, $variationPct, $installments)
     {
 
         // array com todas as parcelas variadas
@@ -323,13 +573,13 @@ class Metodos
 
         // variaveis de inicio
         $totalVariacoes = 0;
-        $valorParcela = ($montante / $qtdParcelas);
-        $decimalVariacao = ($pctVariacao / 100);
+        $valorParcela = ($amount / $installments);
+        $decimalVariacao = ($variationPct / 100);
         $variacaoMin = ($valorParcela - ($valorParcela * $decimalVariacao));
         $variacaoMax = ($valorParcela + ($valorParcela * $decimalVariacao));
 
         // gera as variações com base nos valores minimo = (valor parcela - variacao) e o valor maximo = valor parcela
-        for ($i = 1; $i < $qtdParcelas; $i++) {
+        for ($i = 1; $i < $installments; $i++) {
             // variação em floatval diferente do rand que só aceita intervalos int
             $variacao = number_format(($variacaoMin + ($variacaoMax - $variacaoMin) * (mt_rand() / mt_getrandmax())), 2, '.', '');
             $totalVariacoes += floatval($variacao);
@@ -337,25 +587,36 @@ class Metodos
         }
 
         // pega o restante final do que sobrou das variações para completar o valor do periodo
-        $restoVariacao = ($montante - $totalVariacoes);
+        $restoVariacao = ($amount - $totalVariacoes);
         array_push($listaVariacoes, $restoVariacao);
 
         return $listaVariacoes;
     }
 
-    /*
-  $cnpj = "11222333000199";
-  $cpf = "00100200300";
-  $cep = "08665110";
-  $data = "10102010";
-  $hora = "021050";
-
-  echo mask($cnpj,'##.###.###/####-##');
-  echo mask($cpf,'###.###.###-##');
-  echo mask($cep,'#####-###');
-  echo mask($data,'##/##/####');
-  echo mask($hora,'Agora são ## horas ## minutos e ## segundos');
-  */
+    /**
+     * Aplica uma máscara a um valor.
+     *
+     * Esta função formata um valor de acordo com um padrão de máscara fornecido. O padrão de máscara usa o caractere `#` para indicar onde os dígitos do valor devem ser inseridos, e outros caracteres na máscara são incluídos como estão. 
+     * É útil para formatar números de CNPJ, CPF, CEP, datas e horas com uma máscara específica.
+     *
+     * @param string $val O valor a ser formatado. Deve ser uma string contendo apenas dígitos.
+     * @param string $mask O padrão de máscara a ser aplicado. Deve usar `#` para representar a posição dos dígitos e outros caracteres para o formato desejado.
+     * @return string O valor formatado de acordo com a máscara fornecida.
+     *
+     * @example
+     * // Exemplo de uso:
+     * $cnpj = "11222333000199";
+     * $cpf = "00100200300";
+     * $cep = "08665110";
+     * $data = "10102010";
+     * $hora = "021050";
+     *
+     * echo mask($cnpj, '##.###.###/####-##'); // Saída: 11.222.333/0001-99
+     * echo mask($cpf, '###.###.###-##'); // Saída: 001.002.003-00
+     * echo mask($cep, '#####-###'); // Saída: 08665-110
+     * echo mask($data, '##/##/####'); // Saída: 10/10/2010
+     * echo mask($hora, 'Agora são ## horas ## minutos e ## segundos'); // Saída: Agora são 02 horas 10 minutos e 50 segundos
+     */
     private static function mask($val, $mask)
     {
         $maskared = '';
@@ -372,13 +633,17 @@ class Metodos
             }
         }
         return $maskared;
-    } // mascara
+    }
 
-
-
-    /*
-  if (!isCpfValid($cpf)){ echo 'cpf invalido'}
-  */
+   /**
+     * Valida um CPF.
+     *
+     * Esta função verifica se um CPF é válido, removendo caracteres não numéricos e aplicando o algoritmo de validação do CPF.
+     * A validação inclui verificar o número de dígitos e calcular os dígitos verificadores.
+     *
+     * @param string $cpf O CPF a ser validado. Pode estar em diferentes formatos, como "000.000.000-00", "00000000000", "000 000 000 00", etc.
+     * @return bool Retorna true se o CPF for válido, caso contrário, retorna false.
+     */
     private static function isCpfValid($cpf)
     {
         //Etapa 1: Cria um array com apenas os digitos numéricos, isso permite receber o cpf em diferentes formatos como "000.000.000-00", "00000000000", "000 000 000 00" etc...
@@ -445,7 +710,15 @@ class Metodos
         return $isCpfValid;
     }
 
-    //função para validar e-mail
+    /**
+     * Valida um endereço de e-mail.
+     *
+     * Esta função verifica se um e-mail está no formato correto utilizando uma expressão regular.
+     * O e-mail deve seguir o padrão geral de endereços de e-mail válidos.
+     *
+     * @param string $email O endereço de e-mail a ser validado.
+     * @return bool Retorna true se o e-mail for válido, caso contrário, retorna false.
+     */
     private static function isEmailValid($email)
     {
         $result = true;
@@ -455,6 +728,19 @@ class Metodos
         return $result;
     }
 
+    /**
+     * Valida um número de CNPJ (Cadastro Nacional da Pessoa Jurídica).
+     *
+     * A função verifica se o CNPJ informado é válido ao seguir as seguintes etapas:
+     * - Remove caracteres não numéricos.
+     * - Verifica se possui 14 dígitos.
+     * - Exclui números repetidos como "00000000000000".
+     * - Calcula e compara os dois dígitos verificadores do CNPJ.
+     *
+     * @param string $cnpj O número do CNPJ, podendo ser passado em diferentes formatos (com pontos, barras ou sem formatação).
+     *
+     * @return bool Retorna true se o CNPJ for válido, ou false caso contrário.
+     */
     private static function isCnpjValid($cnpj)
     {
         //Etapa 1: Cria um array com apenas os digitos numéricos, isso permite receber o cnpj em diferentes formatos como "00.000.000/0000-00", "00000000000000", "00 000 000 0000 00" etc...
@@ -527,7 +813,18 @@ class Metodos
         return $isCnpjValid;
     }
 
-    public function imagem_thumbnails($new_width, $new_height, $source_file, $dst_file, $quality = 60)
+    /**
+     * Redimensiona uma imagem mantendo a proporção e gera uma miniatura (thumbnail).
+     *
+     * @param int    $new_width  A nova largura da miniatura.
+     * @param int    $new_height A nova altura da miniatura.
+     * @param string $source_file O caminho completo da imagem original.
+     * @param string $dst_file    O caminho completo para salvar a nova imagem.
+     * @param int    $quality     A qualidade da nova imagem (padrão: 60).
+     *
+     * @return void
+     */
+    public function image_thumbnail($new_width, $new_height, $source_file, $dst_file, $quality = 60)
     {
 
         // captura a imagem e as dimensoes da mesma
@@ -557,7 +854,15 @@ class Metodos
         imagedestroy($new_image);
     }
 
-    public static function converte_cores_hex_rgb($hex, $alpha = false)
+    /**
+     * Converte uma cor hexadecimal para o formato RGB.
+     *
+     * @param string  $hex   O valor hexadecimal da cor (com ou sem '#').
+     * @param boolean $alpha Indica se a cor deve incluir valor de transparência (padrão: false).
+     *
+     * @return string Retorna a cor em formato RGB (por exemplo, "255,255,255").
+     */
+    public static function convertHexToRgb($hex, $alpha = false)
     {
         if (substr($hex, 0, 1) == '#') {
             $hex = str_replace('#', '', $hex);
@@ -574,12 +879,26 @@ class Metodos
         }
     }
 
-    public static function converte_cores_rgb_hex($rgb)
+    /**
+     * Converte uma cor no formato RGB para hexadecimal.
+     *
+     * @param string $rgb A cor em formato RGB (ex: "255,255,255").
+     *
+     * @return string Retorna a cor em formato hexadecimal (ex: "#ffffff").
+     */
+    public static function convertRgbToHex($rgb)
     {
         $color = explode(',', $rgb);
         return sprintf("#%02x%02x%02x", $color[0], $color[1], $color[2]);
     }
 
+    /**
+     * Sanitiza uma string, removendo caracteres especiais e substituindo por equivalentes.
+     *
+     * @param string $string A string a ser sanitizada.
+     * @return string A string sanitizada.
+     * @throws \Exception Se ocorrer um erro durante a sanitização.
+     */
     public static function sanitizeString($string)
     {
         // matriz de entrada
@@ -590,7 +909,13 @@ class Metodos
         return str_replace($what, $by, $string);
     }
 
-    public static function cnpjRandom($mascara = "1")
+    /**
+     * Gera um CNPJ aleatório, com ou sem máscara.
+     *
+     * @param string $mask Define se o CNPJ gerado deve incluir a máscara de formatação. Valores possíveis: "1" (sem máscara) ou "0" (com máscara).
+     * @return string CNPJ gerado aleatoriamente no formato definido pela máscara.
+     */
+    public static function randomCnpj($mask = "1")
     {
         $n1 = rand(0, 9);
         $n2 = rand(0, 9);
@@ -615,7 +940,7 @@ class Metodos
             $d2 = 0;
         }
         $retorno = '';
-        if ($mascara == 1) {
+        if ($mask == 1) {
 
             $retorno = '' . $n1 . $n2 . $n3 . $n4 . $n5 . $n6 . $n7 . $n8 . $n9 . $n10 . $n11 . $n12 . $d1 . $d2;
         } else {
@@ -624,7 +949,13 @@ class Metodos
         return $retorno;
     }
 
-    public static function cpfRandom($mascara = "1")
+    /**
+     * Gera um CPF aleatório, com ou sem máscara.
+     *
+     * @param string $mask Define se o CPF gerado deve incluir a máscara de formatação. Valores possíveis: "1" (sem máscara) ou "0" (com máscara).
+     * @return string CPF gerado aleatoriamente no formato definido pela máscara.
+     */
+    public static function randomCpf($mask = "1")
     {
         $n1 = rand(0, 9);
         $n2 = rand(0, 9);
@@ -646,7 +977,7 @@ class Metodos
             $d2 = 0;
         }
         $retorno = '';
-        if ($mascara == 1) {
+        if ($mask == 1) {
             $retorno = '' . $n1 . $n2 . $n3 . $n4 . $n5 . $n6 . $n7 . $n8 . $n9 . $d1 . $d2;
         } else {
             $retorno = '' . $n1 . $n2 . $n3 . "." . $n4 . $n5 . $n6 . "." . $n7 . $n8 . $n9 . "-" . $d1 . $d2;
@@ -654,34 +985,67 @@ class Metodos
         return $retorno;
     }
 
-    private static function mod($dividendo, $divisor)
+    /**
+    * Calcula o módulo de dois números.
+    *
+    * Esta função calcula o resto da divisão do `$dividend`` pelo `$divisor`
+    * usando uma abordagem de arredondamento. Retorna o resultado da operação de módulo,
+    * garantindo que o resultado seja sempre um número positivo ou zero.
+    *
+    * @param float $dividend` O número a ser dividido (o dividend`).
+    * @param float $divisor O número pelo qual dividir (o divisor).
+    *
+    * @return float O resto da divisão de `$dividend` por `$divisor`.
+    */
+    private static function mod($dividend, $divisor)
     {
-        return round($dividendo - (floor($dividendo / $divisor) * $divisor));
+        return round($dividend - (floor($dividend / $divisor) * $divisor));
     }
 
-    public static function dataExtensoBR(): String
+    /**
+    * Retorna a data atual por extenso no formato brasileiro.
+    *
+    * @return string A data atual formatada como "Dia, dd de Mês de yyyy".
+    */
+    public static function getFullDateInBrazilianFormat(): string
     {
-        setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
         date_default_timezone_set('America/Recife');
-        return strftime('%A, %d de %B de %Y', strtotime('today'));
+        $date = new \DateTime();
+        
+        $formatter = new \IntlDateFormatter(
+            'pt_BR',
+            \IntlDateFormatter::FULL,
+            \IntlDateFormatter::NONE,
+            'America/Recife',
+            \IntlDateFormatter::GREGORIAN,
+            'eeee, dd \'de\' MMMM \'de\' yyyy'
+        );
+
+        return trim($formatter->format($date)); 
     }
 
-
-    public static function extenso($value, $uppercase = 0)
+    /**
+     * Converte um valor numérico para sua representação monetária por extenso em português.
+     *
+     * @param float $value O valor numérico a ser convertido.
+     * @param int $uppercase Define se o resultado deve ser em maiúsculas. 0 para minúsculas, 1 para maiúsculas e 2 para maiúsculas em todas as palavras.
+     * @return string A representação por extenso do valor.
+     */
+    public static function numberInWords($value, $uppercase = 0)
     {
         if (strpos($value, ",") > 0) {
             $value = str_replace(".", "", $value);
             $value = str_replace(",", ".", $value);
         }
-        $singular = ["centavo", "real", "mil", "milhão", "bilhão", "trilhão", "quatrilhão"];
-        $plural = ["centavos", "reais", "mil", "milhões", "bilhões", "trilhões", "quatrilhões"];
+        $singularUnits = ["centavo", "real", "mil", "milhão", "bilhão", "trilhão", "quatrilhão"];
+        $pluralUnits = ["centavos", "reais", "mil", "milhões", "bilhões", "trilhões", "quatrilhões"];
 
-        $c = ["", "cem", "duzentos", "trezentos", "quatrocentos", "quinhentos", "seiscentos", "setecentos", "oitocentos", "novecentos"];
-        $d = ["", "dez", "vinte", "trinta", "quarenta", "cinquenta", "sessenta", "setenta", "oitenta", "noventa"];
-        $d10 = ["dez", "onze", "doze", "treze", "quatorze", "quinze", "dezesseis", "dezesete", "dezoito", "dezenove"];
-        $u = ["", "um", "dois", "três", "quatro", "cinco", "seis", "sete", "oito", "nove"];
+        $hundreds = ["", "cem", "duzentos", "trezentos", "quatrocentos", "quinhentos", "seiscentos", "setecentos", "oitocentos", "novecentos"];
+        $tens= ["", "dez", "vinte", "trinta", "quarenta", "cinquenta", "sessenta", "setenta", "oitenta", "noventa"];
+        $teens = ["dez", "onze", "doze", "treze", "quatorze", "quinze", "dezesseis", "dezesete", "dezoito", "dezenove"];
+        $units = ["", "um", "dois", "três", "quatro", "cinco", "seis", "sete", "oito", "nove"];
 
-        $z = 0;
+        $zeroCount = 0;
 
         $value = number_format($value, 2, ".", ".");
         $integer = explode(".", $value);
@@ -690,37 +1054,37 @@ class Metodos
             for ($ii = strlen($integer[$i]); $ii < 3; $ii++)
                 $integer[$i] = "0" . $integer[$i];
 
-        $fim = $cont - ($integer[$cont - 1] > 0 ? 1 : 2);
-        $rt = '';
+        $end = $cont - ($integer[$cont - 1] > 0 ? 1 : 2);
+        $resultText = '';
         for ($i = 0; $i < $cont; $i++) {
             $value = $integer[$i];
-            $rc = (($value > 100) && ($value < 200)) ? "cento" : $c[$value[0]];
-            $rd = ($value[1] < 2) ? "" : $d[$value[1]];
-            $ru = ($value > 0) ? (($value[1] == 1) ? $d10[$value[2]] : $u[$value[2]]) : "";
+            $rc = (($value > 100) && ($value < 200)) ? "cento" : $hundreds[$value[0]];
+            $rd = ($value[1] < 2) ? "" : $tens[$value[1]];
+            $ru = ($value > 0) ? (($value[1] == 1) ? $teens[$value[2]] : $units[$value[2]]) : "";
 
             $r = $rc . (($rc && ($rd || $ru)) ? " e " : "") . $rd . (($rd &&
                 $ru) ? " e " : "") . $ru;
             $t = $cont - 1 - $i;
-            $r .= $r ? " " . ($value > 1 ? $plural[$t] : $singular[$t]) : "";
+            $r .= $r ? " " . ($value > 1 ? $pluralUnits[$t] : $singularUnits[$t]) : "";
             if (
                 $value == "000"
             )
-                $z++;
-            elseif ($z > 0)
-                $z--;
-            if (($t == 1) && ($z > 0) && ($integer[0] > 0))
-                $r .= (($z > 1) ? " de " : "") . $plural[$t];
+                $zeroCount++;
+            elseif ($zeroCount > 0)
+                $zeroCount--;
+            if (($t == 1) && ($zeroCount > 0) && ($integer[0] > 0))
+                $r .= (($zeroCount > 1) ? " de " : "") . $pluralUnits[$t];
             if ($r)
-                $rt = $rt . ((($i > 0) && ($i <= $fim) &&
-                    ($integer[0] > 0) && ($z < 1)) ? (($i < $fim) ? ", " : " e ") : " ") . $r;
+                $resultText = $resultText . ((($i > 0) && ($i <= $end) &&
+                    ($integer[0] > 0) && ($zeroCount < 1)) ? (($i < $end) ? ", " : " e ") : " ") . $r;
         }
 
         if (!$uppercase) {
-            return trim($rt ? $rt : "zero");
+            return trim($resultText ? $resultText : "zero");
         } elseif ($uppercase == "2") {
-            return trim(strtoupper($rt) ? strtoupper(strtoupper($rt)) : "Zero");
+            return trim(strtoupper($resultText) ? strtoupper(strtoupper($resultText)) : "Zero");
         } else {
-            return trim(ucwords($rt) ? ucwords($rt) : "Zero");
+            return trim(ucwords($resultText) ? ucwords($resultText) : "Zero");
         }
     }
 }
