@@ -1,11 +1,16 @@
 {
     "name": "andersonhsilva/metodos-php",
+    "description": "Métodos PHP para uso diário",
+    "version": "3.0.0",
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Andersonhsilva\\MetodosPhp\\": "src/"
+            "Andersonhsilva\\MethodsPhp\\": "src/"
         }
+    },
+    "require": {
+        "php": "^8.3"
     },
     "authors": [
         {
@@ -13,6 +18,5 @@
             "email": "anderson.h.silva@gmail.com"
         }
     ],
-    "minimum-stable": "dev",
-    "require": {}
+    "minimum-stable": "dev"
 }
