@@ -1,0 +1,16 @@
+git
+--------
+git add .
+git commit -m "Atualização para versão 3.0.0 com suporte a PHP 8.3 ou superior"
+git tag v3.0.0
+git push origin master --tags
+
+
+github
+--------
+Apenas se certificar se o repositorio está tageado com o comando anterior, clicar no link Tags ao lado de Branches, feita para atualização dos arquivos na biblioteca.
+
+packagist
+--------
+Acesse o -> https://packagist.org/
+Encontre o pacote "andersonhsilva/metodos-php" e clique no link do mesmo, em seguida aperta o botão verde "Update" para atualizar a versão do repositório packagist com o github, apenas isso.
