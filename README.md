@@ -9,7 +9,7 @@ O projeto está atualizado para o PHP 8.3.10. Utilize sempre a última versão d
 1. Execute o comando abaixo na raiz do seu projeto pelo terminal de comandos:
 
     ```bash
-    composer require andersonhsilva/methods-php
+    composer require andersonhsilva/metodos-php
     ```
 
 2. Para que a chamada dos métodos fique disponível globalmente em todo o projeto Laravel:
