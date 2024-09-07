@@ -363,7 +363,7 @@ class Methods
      * // Resultado: null
      * ```
      */
-    public static function onlyNumber(string $value): ?string
+    public static function onlyNumber(?string $value): ?string
     {
         $result = preg_replace("/[^0-9]/", "", $value);
         return (!empty($result)) ? $result : null;
@@ -391,7 +391,7 @@ class Methods
      * // Resultado: null
      * ```
      */
-    public static function onlyLettersAndNumbers(string $value): ?string
+    public static function onlyLettersAndNumbers(?string $value): ?string
     {
         $result = preg_replace("/[^A-Za-z0-9]/", "", $value);
         return (!empty($result)) ? $result : null;
@@ -419,7 +419,7 @@ class Methods
      * // Resultado: ""
      * ```
      */
-    public static function onlyFirstName(string $value): string
+    public static function onlyFirstName(?string $value): string
     {
         return (!empty($value)) ? explode(" ", $value)[0] : '';
     }
