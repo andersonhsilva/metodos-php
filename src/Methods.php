@@ -1,5 +1,4 @@
 <?php
-
 namespace Andersonhsilva\MethodsPhp;
 
 class Methods
