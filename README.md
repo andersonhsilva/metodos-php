@@ -1,6 +1,6 @@
 # Métodos Elaborados em PHP para Uso Diário
 
-Este é um projeto totalmente *Open Source*. Para utilizá-lo, copiá-lo e modificá-lo você não paga absolutamente nada. No entanto, para manter o projeto de forma adequada, aceitamos sugestões e contribuições de códigos para realização de testes e identificação de possíveis falhas e bugs.
+Este é um projeto privativo. A utilização, cópia e modificação deste projeto só podem ser realizadas com autorização expressa do autor. A distribuição ou uso não autorizado deste código é estritamente proibido. Para contribuições, testes e identificação de falhas, entre em contato diretamente com o autor.
 
 O projeto está atualizado para o PHP 8.3.10. Utilize sempre a última versão do PHP.
 
